@@ -1,0 +1,197 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --ff-heading:'Epilogue', sans-serife;
+  --ff-texting:'Open sans', sans-serife;
+
+  --hue:250; /*variável de cor que  quero que seja a matiz de todas as outras*/
+  --bg-primary: hsl(var(--hue), 22%, 20%);
+  --fc-primary: hsl(var(--hue), 0%, 100%);
+  --fc-secondary: hsl(var(--hue), 50%, 80%);
+  --fc-secondary-dark: hsl(var(--hue), 100%, 11%);
+
+  font-size: 62.5%; /*padrão para responsividade*/
+  --fs-body: 1.6rem; /*complementa o padrão, fonte padrão do navegador*/
+  --fs-heading: clamp(4rem, 1rem + 5vw, 5.6rem);
+  --fs-heading-sm: clamp(3rem, 0.5rem + 3vw, 4rem);
+}
+
+body {
+  font-family: var(--ff-texting);
+
+  background: var(--bg-primary);
+  color: var(--fc-primary);
+
+  font-size: var(--fs-body);
+}
+
+.page {
+  max-width: clamp(33rem, 30rem +60vw 117rem); /*evitando usar mais uma propriedade que está comentada no @media*/
+  padding: 0 5rem; 
+  margin: 0 auto;
+}
+
+img {/*colocando a imagem para respeitar a largura que definimos na div page*/
+  width: 100%; /*sem isso a imagem transborda pra fora da caixa: seria um overflow*/
+  height: auto; /*altura automática pela sua proporção de largura, cada imagem tem seu tamaho, fica proporcional*/
+}
+
+header {
+  margin: 10rem 0 8rem;
+  font-family: var(--ff-heading);
+
+  text-align: center;
+
+  animation: topdown 700ms; /*modo short-hand*/
+  /*animation-name: topdown;
+  animation-duration: 700ms;*/
+}
+
+header p {
+  color: var(--fc-secondary);
+  text-transform: uppercase;
+
+  line-height: 3.2rem;
+  letter-spacing: 3px;
+
+  font-weight: 400;
+
+  margin-bottom: 1.7rem;
+}
+
+header h1 {
+  font-weight: 800;
+  font-size: var(--fs-heading);
+  line-height: 4.8rem;
+}
+
+main {/*poderia ter feito com o flex também, exitem várias formas de codar*/
+  display: grid;
+  gap: 3.2rem;
+
+  padding-bottom: 10rem;
+
+  animation: downtop 700ms 350ms backwards;/*usando o backwards (coloca o ponto zero como padrão) para fugir do momento inicial padrão que acaba gerando uma piscada*/
+}
+
+.card {/*preciso que o card seja position: relative, para que o absoluto do título h2 fique na left e bottom relativa a este card, a cada card.*/
+  position: relative;
+
+  font-family: var(--ff-heading);
+}
+
+.card img { /*fazendo com que a imagem fique corresponente ao tamanho do cartão do layout*/
+  height: 41.6rem;
+  object-fit: cover;/*ideia de pegar o objeto imagem em si, vai considerar
+  a tag img como uma caixa e o source como o objeto*/
+  filter: brightness(0.5);
+  border-radius: 6px; /*deixamos em px mesmo, não causará grande diferemça, são 6px, mas são em um borda radio.*/
+  
+  transition: all 200ms; /*ajustuando o transform e o opacity para não serem repentinos, o ajuste do tempo é no elemento*/
+
+}
+
+.card img:hover {
+  transform:scale(1.1); /*mouse em cima escala aumenta*/
+  opacity: 0.4; /*mouse em cima opacidade é acionada escondendo um pouco a imagem dando ênfase ao texto*/
+}
+
+/*ideia de sobreposição de elementos sempre chama o position absolute*/
+.card h2 {/*preciso que o card seja position: relative, para que este absoluto fique na left e bottom relativa a este card, a cada card.*/
+  position: absolute;
+  bottom: 5.2rem;
+  left: 2.8rem;
+
+  font-size: (--fs-heading-sm);
+  font-weight: 800;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2.3rem;
+}
+
+.card h2 span {
+  border-radius: 2rem;
+  background: var(--fc-primary);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  color: var(--fc-secondary-dark);
+  
+  padding: 0 1.6rem;
+  width: fit-content;/*fit=encaixar. Encaixar no conteúdo(vai acompanhar o conteúdo dele). Pois ele estava se alargando quando aumentamos a letra do h2*/
+  height: 3.8rem; /*não adianta pôr altura em span, ele não recebe algumas propriedades block. 
+  Então mudaremos para display inline-flex para receber a altura e ainda mexer no align:center.*/
+  
+  display: inline-flex;
+  align-items: center;
+
+}
+
+
+@keyframes topdown {
+  0% {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes downtop {
+  0% {
+    opacity: 0;
+    transform: translateY(15);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*responsividade - configurações alteradas para desktop*/
+@media (min-width: 700px) { /*dois pontos de quebra para não quebrar os textos na mudança de tela, achamos melhor ter um ponto extra e dividir em dois só nesse ponto de tela (estava estranho nesse ponto estar na outra formatação),pois neste ponto não estava legal com as configurações do media abaixo*/
+  .root {
+    --fs-heading: 5.6rem; /*conforme layout esse fontsize altera, então mudamos a variável aqui apenas pro desktop, pois foi declarada em um root dentro do media; e já alterou em todo lugar que usei essa variável*/
+  }
+  
+  /*.page {
+    max-width: 117rem; 
+    padding: 0 5rem; 
+    }*/
+
+  main {
+    grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width:930px) {
+
+  main { /*Definindo o modelo do meu grid, definindo quantas e nomenando as áreas dele. Duplicamos as que queríamos maior, seguindo o layout.*/
+    grid-template-areas: "A B B"
+    "C C D ";
+  }
+
+  main div:nth-child(1) { /*definindo quem é o elemento correspondente a cada área do grid.*/
+    grid-area: A;
+  }
+  main div:nth-child(2) {/*definindo quem é o elemento correspondente a cada área do grid.*/
+    grid-area: B;
+  }
+  main div:nth-child(3) { /*definindo quem é o elemento correspondente a cada área do grid.*/
+    grid-area: C;  
+  }
+  main div:nth-child(4) { /*definindo quem é o elemento correspondente a cada área do grid.*/
+    grid-area: D; 
+  }
+}
+
+/*LAYOUT FIGMA: https://www.figma.com/file/0aRclCCYlrfy3yko8m4qyO/Explorer-Stage-03-Projeto-03-(Copy)?node-id=203%3A1925*/
+
